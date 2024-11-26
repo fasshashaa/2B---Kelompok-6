@@ -1,48 +1,45 @@
 <?php
-// app/models/User.php
-require_once '../config/database.php';
+// app/models/DataPeserta.php
 
-class User {
+class DataPeserta {
     private $db;
 
     public function __construct() {
-        $this->db = (new Database())->connect();
+        $this->db = new Database(); // Pastikan kelas Database sudah benar.
     }
 
-    public function getAllUsers() {
-        $query = $this->db->query("SELECT * FROM users");
+    public function getAllData() {
+        $query = $this->db->query("SELECT * FROM enrollments");
         return $query->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public function add($peserta, $kursus, $tanggal_daftar) {
+        $query = $this->db->prepare("INSERT INTO enrollments (peserta, kursus, tanggal_daftar) VALUES (:peserta, :kursus, :tanggal_daftar)");
+        return $query->execute([
+            ':peserta' => $peserta,
+            ':kursus' => $kursus,
+            ':tanggal_daftar' => $tanggal_daftar,
+        ]);
+    }
+
     public function find($id) {
-        $query = $this->db->prepare("SELECT * FROM users WHERE id = :id");
-        $query->bindParam(':id', $id, PDO::PARAM_INT);
-        $query->execute();
+        $query = $this->db->prepare("SELECT * FROM enrollments WHERE id = :id");
+        $query->execute([':id' => $id]);
         return $query->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function add($name, $email) {
-        $query = $this->db->prepare("INSERT INTO users (name, email) VALUES (:name, :email)");
-        $query->bindParam(':name', $name);
-        $query->bindParam(':email', $email);
-        return $query->execute();
-    }
-
-    // Update user data by ID
     public function update($id, $data) {
-        $query = "UPDATE users SET name = :name, email = :email WHERE id = :id";
-        $stmt = $this->db->prepare($query);
-        $stmt->bindParam(':name', $data['name']);
-        $stmt->bindParam(':email', $data['email']);
-        $stmt->bindParam(':id', $id);
-        return $stmt->execute();
+        $query = $this->db->prepare("UPDATE enrollments SET peserta = :peserta, kursus = :kursus, tanggal_daftar = :tanggal_daftar WHERE id = :id");
+        return $query->execute([
+            ':id' => $id,
+            ':peserta' => $data['peserta'],
+            ':kursus' => $data['kursus'],
+            ':tanggal_daftar' => $data['tanggal_daftar'],
+        ]);
     }
 
-    // Delete user by ID
     public function delete($id) {
-        $query = "DELETE FROM users WHERE id = :id";
-        $stmt = $this->db->prepare($query);
-        $stmt->bindParam(':id', $id);
-        return $stmt->execute();
+        $query = $this->db->prepare("DELETE FROM enrollments WHERE id = :id");
+        return $query->execute([':id' => $id]);
     }
 }
