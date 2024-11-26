@@ -10,7 +10,7 @@ class EnrollmentController {
     }
 
     public function index() {
-        $users = $this->pesertaenrollment->getAllUsers();
+        $users = $this->pesertaenrollment->getAllPeserta();
         require_once '../app/views/user/index.php';
 
     }
@@ -34,13 +34,22 @@ class EnrollmentController {
 
     // Process the update request
     public function update($id, $data) {
+        // Validasi data
+        if (empty($data['peserta']) || empty($data['kursus']) || empty($data['tanggal_daftar'])) {
+            die("Error: Semua field harus diisi.");
+        }
+    
+        // Lakukan update
         $updated = $this->pesertaenrollment->update($id, $data);
+    
         if ($updated) {
             header("Location: /user/index"); // Redirect to user list
+            exit;
         } else {
-            echo "Failed to update user.";
+            echo "Failed to update peserta.";
         }
     }
+    
 
     // Process delete request
     public function delete($id) {
@@ -48,7 +57,7 @@ class EnrollmentController {
         if ($deleted) {
             header("Location: /user/index"); // Redirect to user list
         } else {
-            echo "Failed to delete user.";
+            echo "Failed to delete peserta.";
         }
     }
 }
