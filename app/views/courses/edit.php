@@ -40,27 +40,28 @@
 </head>
 <body>
     <h1>Edit Kursus</h1>
-    <form action="/user/create/<?= htmlspecialchars($course['id_courses']) ?>" method="POST">
-        <label for="judul_kursus">Judul Kursus</label>
-        <input type="text" name="judul_kursus" id="judul_kursus" value="<?= htmlspecialchars($course['judul_kursus']) ?>" required>
+    <form action="/courses/update/<?= htmlspecialchars($course['id_courses']) ?>" method="POST">
+    <label for="judul_kursus">Judul Kursus</label>
+    <input type="text" name="judul_kursus" id="judul_kursus" value="<?= htmlspecialchars($course['judul_kursus']) ?>" required>
 
-        <label for="deskripsi">Deskripsi</label>
-        <textarea name="deskripsi" id="deskripsi" rows="5" required><?= htmlspecialchars($course['deskripsi']) ?></textarea>
+    <label for="deskripsi">Deskripsi</label>
+    <textarea name="deskripsi" id="deskripsi" rows="5" required><?= htmlspecialchars($course['deskripsi']) ?></textarea>
 
-        <label for="id_instruktur">Instruktur</label>
-        <select name="id_instruktur" id="id_instruktur" required>
-            <!-- Menampilkan daftar instruktur dari database -->
-            <?php foreach ($instructors as $instructor): ?>
-                <option value="<?= htmlspecialchars($instructor['id_user']) ?>" <?= $course['id_instruktur'] == $instructor['id_user'] ? 'selected' : '' ?>>
-                    <?= htmlspecialchars($instructor['name']) ?>
-                </option>
-            <?php endforeach; ?>
-        </select>
+    <label for="id_instruktur">Instruktur</label>
+    <select name="id_instruktur" id="id_instruktur" required>
+        <?php foreach ($instructors as $instructor): ?>
+            <option value="<?= htmlspecialchars($instructor['id_user']) ?>"
+                <?= $course['id_instruktur'] == $instructor['id_user'] ? 'selected' : '' ?>>
+                <?= htmlspecialchars($instructor['name']) ?>
+            </option>
+        <?php endforeach; ?>
+    </select>
 
-        <label for="durasi">Durasi (Jam)</label>
-        <input type="number" name="durasi" id="durasi" value="<?= htmlspecialchars($course['durasi']) ?>" required>
+    <label for="durasi">Durasi (Jam)</label>
+    <input type="number" name="durasi" id="durasi" value="<?= htmlspecialchars($course['durasi']) ?>" required>
 
-        <button type="submit">Simpan Perubahan</button>
-    </form>
+    <button type="submit">Simpan Perubahan</button>
+</form>
+
 </body>
 </html>

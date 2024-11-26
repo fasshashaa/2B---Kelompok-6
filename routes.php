@@ -10,37 +10,26 @@ $requestMethod = $_SERVER['REQUEST_METHOD'];
 if ($url == '/courses/index' || $url == '/') {
     $controller->index();
 } elseif ($url == '/courses/create' && $requestMethod == 'GET') {
-    $controller->create();
+    $controller->create(); // Menampilkan form untuk menambah kursus
 } elseif ($url == '/courses/store' && $requestMethod == 'POST') {
-    $controller->store();
-} elseif ($url == '/courses/create' && $requestMethod == 'GET') {
-    $controller->create();
-} elseif ($url == '/courses/create' && $requestMethod == 'POST') {
-    $controller->create();
-} elseif (preg_match('/\/courses\/edit\/(\d+)/', $url, $matches) && $requestMethod == 'GET') {
-    $coursesId = $matches[1];
-    $controller->edit($coursesId);
-} elseif (preg_match('/\/courses\/update\/(\d+)/', $url, $matches) && $requestMethod == 'POST') {
-    $coursesId = $matches[1];
-    $controller->update($coursesId, $_POST);
-} elseif (preg_match('/\/courses\/delete\/(\d+)/', $url, $matches) && $requestMethod == 'POST') {
-    $coursesId = $matches[1];
-    $controller->delete($coursesId);
-
-// Rute untuk kursus
-} elseif (preg_match('/\/courses\/edit\/(\d+)/', $url, $matches) && $requestMethod == 'GET') {
+    $controller->store(); // Menyimpan kursus baru
+// Rute untuk edit kursus (GET)
+}elseif (preg_match('/\/courses\/edit\/(\d+)/', $url, $matches) && $requestMethod == 'GET') {
     $courseId = $matches[1];
     $controller->editCourse($courseId);
-
-} elseif (preg_match('/\/courses\/update\/(\d+)/', $url, $matches) && $requestMethod == 'POST') {
+} 
+// Rute untuk update kursus (POST)
+elseif (preg_match('/\/courses\/update\/(\d+)/', $url, $matches) && $requestMethod == 'POST') {
     $courseId = $matches[1];
-    $controller->updateCourse($courseId, $_POST);
+    $controller->updateCourse($courseId);
+
 } elseif (preg_match('/\/courses\/delete\/(\d+)/', $url, $matches) && $requestMethod == 'POST') {
+    // Menghapus kursus
     $courseId = $matches[1];
     $controller->deleteCourse($courseId);
 
 // Rute jika tidak ditemukan
 } else {
     http_response_code(404);
-    echo "404 Not Found";
+    echo "404 Found";
 }

@@ -11,144 +11,80 @@ class CoursesController {
         $this->courseModel = new Courses();
     }
 
-    // Menampilkan daftar pengguna
+    // Menampilkan daftar kursus
     public function index() {
-        $courses = $this->courseModel->getAllCourses();
+        $kursus = $this->courseModel->getAllCourses();
         require_once '../app/views/courses/index.php';
     }
 
-    // Menampilkan form pembuatan pengguna
+    // Menampilkan form pembuatan kursus
     public function create() {
+        $users = $this->userModel->getAllUsers(); // Ambil semua instruktur
         require_once '../app/views/courses/create.php';
     }
 
-    // Menyimpan data pengguna baru
+    // Menyimpan data kursus baru
     public function store() {
-        $name = htmlspecialchars($_POST['name'] ?? '');
-        $email = filter_var($_POST['email'] ?? '', FILTER_VALIDATE_EMAIL);
+        $judul_kursus = htmlspecialchars($_POST['judul_kursus'] ?? '');
+        $deskripsi = htmlspecialchars($_POST['deskripsi'] ?? '');
+        $id_instruktur = filter_var($_POST['id_instruktur'] ?? '', FILTER_VALIDATE_INT);
+        $durasi = filter_var($_POST['durasi'] ?? '', FILTER_VALIDATE_INT);
 
-        if ($name && $email) {
-            if ($this->userModel->add($name, $email)) {
-                header('Location: /user/index');
+        if ($judul_kursus && $deskripsi && $id_instruktur && $durasi) {
+            if ($this->courseModel->addCourse($judul_kursus, $deskripsi, $id_instruktur, $durasi)) {
+                header('Location: /courses/index');
                 exit;
             } else {
-                $error = "Gagal menambahkan pengguna.";
+                $error = "Gagal menambahkan kursus.";
             }
         } else {
-            $error = "Data input tidak valid.";
+            $error = "Semua kolom wajib diisi!";
         }
-
-        require_once '../app/views/user/create.php';
+        require_once '../app/views/courses/create.php';  // Tampilkan form kembali jika ada error
     }
 
-    // Menampilkan form edit dengan data pengguna
-    public function edit($id) {
-        $id = intval($id);
-        $user = $this->userModel->find($id);
-
-        if ($user) {
-            require_once '../app/views/user/edit.php';
-        } else {
-            echo "Pengguna tidak ditemukan.";
-        }
+    // Menampilkan form edit kursus
+public function editCourse($courseId) {
+    $courseId = intval($courseId); // Pastikan ID valid
+    $course = $this->courseModel->getCourseById($courseId); // Ambil data kursus
+    if ($course) {
+        require_once '../app/views/courses/edit.php'; // Tampilkan form edit
+    } else {
+        echo "Kursus dengan ID $courseId tidak ditemukan.";
     }
+}
 
-    // Memproses permintaan update pengguna
-    public function update($id) {
-        $id = intval($id);
-        $name = htmlspecialchars($_POST['name'] ?? '');
-        $email = filter_var($_POST['email'] ?? '', FILTER_VALIDATE_EMAIL);
 
-        if ($name && $email) {
-            if ($this->userModel->update($id, ['name' => $name, 'email' => $email])) {
-                header('Location: /user/index');
+    // Memproses pembaruan kursus
+    public function updateCourse($courseId) {
+        $id_courses = intval($courseId); // Pastikan ID valid
+        $judul_kursus = htmlspecialchars($_POST['judul_kursus'] ?? '');
+        $deskripsi = htmlspecialchars($_POST['deskripsi'] ?? '');
+        $id_instruktur = filter_var($_POST['id_instruktur'] ?? '');
+        $durasi = filter_var($_POST['durasi'] ?? '');
+
+        if ($judul_kursus && $deskripsi && $id_instruktur && $durasi) {
+            $updateResult = $this->courseModel->updateCourse($courseId, $judul_kursus, $deskripsi, $id_instruktur, $durasi);
+            if ($updateResult) {
+                header('Location: /courses/index');
                 exit;
             } else {
-                echo "Gagal memperbarui pengguna.";
+                echo "Gagal memperbarui kursus.";
             }
         } else {
             echo "Data input tidak valid.";
         }
     }
 
-    // Memproses permintaan penghapusan pengguna
-    public function delete($id) {
-        $id = intval($id);
-        if ($this->userModel->delete($id)) {
-            header('Location: /user/index');
-            exit;
-        } else {
-            echo "Gagal menghapus pengguna.";
-        }
-    }
-
-    // Menampilkan form tambah kursus atau memproses penambahan kursus baru
-    public function addCourse() {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $judul_kursus = htmlspecialchars($_POST['judul_kursus'] ?? '');
-            $deskripsi = htmlspecialchars($_POST['deskripsi'] ?? '');
-            $id_instruktur = intval($_POST['id_instruktur'] ?? 0);
-            $durasi = intval($_POST['durasi'] ?? 0);
-
-            if ($judul_kursus && $deskripsi && $id_instruktur && $durasi) {
-                if ($this->courseModel->addCourse($judul_kursus, $deskripsi, $id_instruktur, $durasi)) {
-                    header('Location: /user/index');
-                    exit;
-                } else {
-                    $error = "Gagal menambahkan kursus.";
-                }
-            } else {
-                $error = "Semua kolom wajib diisi!";
-            }
-        }
-
-        require_once '../app/views/user/add_course.php';
-    }
-
-    // Menampilkan form edit kursus atau memproses pembaruan kursus
-    public function editCourse($courseId) {
-        $courseId = intval($courseId); // Pastikan ID valid
-        $course = $this->courseModel->getCourseById($courseId); // Ambil data kursus
-        $instructors = $this->userModel->getAllUsers(); // Ambil data instruktur
-        if ($course) {
-            require_once '../app/views/user/editCourse.php'; // Tampilkan form edit
-        } else {
-            echo "Kursus tidak ditemukan.";
-        }
-    }
-
-    // Update Kursus (POST)
-    public function updateCourse($courseId, $postData) {
-        // Validasi dan proses data yang dikirim melalui form
-        $judulKursus = $postData['judul_kursus'];
-        $deskripsi = $postData['deskripsi'];
-        $idInstruktur = $postData['id_instruktur'];
-        $durasi = $postData['durasi'];
-        
-        // Update data kursus di database
-        $updateResult = $this->courseModel->updateCourse($courseId, $judulKursus, $deskripsi, $idInstruktur, $durasi);
-        
-        if ($updateResult) {
-            // Jika berhasil, arahkan pengguna kembali ke halaman daftar kursus atau halaman lainnya
-            header('Location: /user/index');
-            exit;
-        } else {
-            echo "Gagal memperbarui kursus.";
-        }
-    }
-    
-    
-
-    // Hapus Kursus (POST)
-    public function deleteCourse($courseId) {
-        $courseId = intval($courseId);
-        if ($this->courseModel->deleteCourse($courseId)) {
-            header('Location: /user/index');
+    // Memproses penghapusan kursus
+    public function deleteCourse($id_courses) {
+        $id_courses = intval($id_courses); // Pastikan ID valid
+        if ($this->courseModel->deleteCourse($id_courses)) {
+            header('Location: /courses/index');
             exit;
         } else {
             echo "Gagal menghapus kursus.";
         }
     }
-
-    
 }
+?>

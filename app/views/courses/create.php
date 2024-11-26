@@ -67,7 +67,7 @@
         <p class="error-message"><?= htmlspecialchars($error) ?></p>
     <?php endif; ?>
 
-    <form action="/crouses/create" method="POST">
+    <form action="/courses/store" method="POST">
         <label for="judul_kursus">Judul Kursus:</label>
         <input type="text" id="judul_kursus" name="judul_kursus" placeholder="Masukkan judul kursus" required>
 

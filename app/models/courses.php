@@ -56,12 +56,12 @@ class Courses {
     }
     
 
-    public function deleteCourse($id) {
+    public function deleteCourse($id_courses) {
         $query = "DELETE FROM courses WHERE id_courses = ?";
         $stmt = $this->db->prepare($query);
-        return $stmt->execute([$id]);
+        return $stmt->execute([$id_courses]);
     }
-    public function getCourseById($id) {
+    public function getCourseById($courseId) {
         try {
             $query = "
                 SELECT 
@@ -76,12 +76,13 @@ class Courses {
                     courses.id_courses = ?
             ";
             $stmt = $this->db->prepare($query);
-            $stmt->execute([$id]);
+            $stmt->execute([$courseId]);
             return $stmt->fetch(PDO::FETCH_ASSOC); // Mengembalikan satu baris data kursus
         } catch (PDOException $e) {
             die("Error fetching course by ID: " . $e->getMessage());
         }
     }
+    
     
 }
 ?>
