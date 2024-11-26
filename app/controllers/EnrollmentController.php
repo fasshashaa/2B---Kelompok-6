@@ -1,5 +1,5 @@
 <?php
-// app/controllers/UserController.php
+// app/controllers/enrollmentController.php
 require_once '../app/models/Enrollment.php';
 
 class EnrollmentController {
@@ -11,12 +11,12 @@ class EnrollmentController {
 
     public function index() {
         $users = $this->pesertaenrollment->getAllPeserta();
-        require_once '../app/views/user/index.php';
+        require_once '../app/views/enrollment/index.php';
 
     }
 
     public function create() {
-        require_once '../app/views/user/create.php';
+        require_once '../app/views/enrollment/create.php';
     }
 
     public function store() {
@@ -24,12 +24,12 @@ class EnrollmentController {
         $kursus = $_POST['kursus'];
         $tanggal_daftar = $_POST['tanggal_daftar'];
         $this->pesertaenrollment->add($peserta, $kursus, $tanggal_daftar);
-        header('Location: /user/index');
+        header('Location: /enrollment/index');
     }
     // Show the edit form with the user data
     public function edit($id) {
         $peserta = $this->pesertaenrollment->find($id); // Assume find() gets user by ID
-        require_once __DIR__ . '/../views/user/edit.php';
+        require_once __DIR__ . '/../views/enrollment/edit.php';
     }
 
     // Process the update request
@@ -43,7 +43,7 @@ class EnrollmentController {
         $updated = $this->pesertaenrollment->update($id, $data);
     
         if ($updated) {
-            header("Location: /user/index"); // Redirect to user list
+            header("Location: /enrollment/index"); // Redirect to user list
             exit;
         } else {
             echo "Failed to update peserta.";
@@ -55,7 +55,7 @@ class EnrollmentController {
     public function delete($id) {
         $deleted = $this->pesertaenrollment->delete($id);
         if ($deleted) {
-            header("Location: /user/index"); // Redirect to user list
+            header("Location: enrollment/index"); // Redirect to user list
         } else {
             echo "Failed to delete peserta.";
         }
