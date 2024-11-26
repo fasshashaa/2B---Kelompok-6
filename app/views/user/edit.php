@@ -10,7 +10,7 @@
     <form action="/user/update/<?php echo $peserta['id']; ?>" method="POST">
         <pre>
         <label for="peserta">Nama Peserta:</label>
-        <input type="text" id="name" name="name" value="<?php echo $peserta['peserta']; ?>" required>
+        <input type="text" id="peserta" name="peserta" value="<?php echo $peserta['peserta']; ?>" required>
         <input type="hidden" id="id" name="id" value="<?php echo $peserta['id']; ?>" required>
         <br>
         <label for="kursus">Jenis Kursus:</label>
