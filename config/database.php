@@ -1,10 +1,10 @@
 <?php
 // config/database.php
 class Database {
-    private $host = 'localhost';
-    private $db_name = 'mvc';
-    private $username = 'root';
-    private $password = '';
+    private $host = '160.19.166.42';
+    private $db_name = '2B_klp6';
+    private $username = '2B_klp6';
+    private $password = 'wWsOIVYp7Nmvj96_';
     private $conn;
 
     public function connect() {
@@ -17,4 +17,10 @@ class Database {
         }
         return $this->conn;
     }
+}
+$db = (new Database())->connect();
+if ($db) {
+    echo "Database connected!";
+} else {
+    echo "Failed to connect to database.";
 }
