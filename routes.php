@@ -1,9 +1,9 @@
 <?php
 // routes.php
 
-require_once 'app/controllers/UserController.php';
+require_once 'app/controllers/EnrollmentController.php';
 
-$controller = new UserController();
+$controller = new Controller(); // Ganti UserController dengan DataPesertaController
 $url = $_SERVER['REQUEST_URI'];
 $requestMethod = $_SERVER['REQUEST_METHOD'];
 
@@ -14,14 +14,14 @@ if ($url == '/user/index' || $url == '/') {
 } elseif ($url == '/user/store' && $requestMethod == 'POST') {
     $controller->store();
 } elseif (preg_match('/\/user\/edit\/(\d+)/', $url, $matches) && $requestMethod == 'GET') {
-    $userId = $matches[1];
-    $controller->edit($userId);
+    $pesertaId = $matches[1];
+    $controller->edit($pesertaId);
 } elseif (preg_match('/\/user\/update\/(\d+)/', $url, $matches) && $requestMethod == 'POST') {
-    $userId = $matches[1];
-    $controller->update($userId, $_POST);
+    $pesertaId = $matches[1];
+    $controller->update($pesertaId, $_POST);
 } elseif (preg_match('/\/user\/delete\/(\d+)/', $url, $matches) && $requestMethod == 'GET') {
-    $userId = $matches[1];
-    $controller->delete($userId);
+    $pesertaId = $matches[1];
+    $controller->delete($pesertaId);
 } else {
     http_response_code(404);
     echo "404 Not Found";
