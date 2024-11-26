@@ -7,7 +7,6 @@ class CoursesController {
     private $courseModel;
 
     public function __construct() {
-        $this->userModel = new User();
         $this->courseModel = new Courses();
     }
 
