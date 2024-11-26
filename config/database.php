@@ -18,9 +18,3 @@ class Database {
         return $this->conn;
     }
 }
-$db = (new Database())->connect();
-if ($db) {
-    echo "Database connected!";
-} else {
-    echo "Failed to connect to database.";
-}
