@@ -9,7 +9,7 @@ class Enrollment {
         $this->db = (new Database())->connect();
     }
 
-    public function getAllUsers() {
+    public function getAllPeserta() {
         $query = $this->db->query("SELECT * FROM enrollments");
         return $query->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -31,14 +31,22 @@ class Enrollment {
 
     // Update user data by ID
     public function update($id, $data) {
+        // Validasi data
+        if (empty($data['peserta']) || empty($data['kursus']) || empty($data['tanggal_daftar'])) {
+            throw new Exception("Peserta, kursus, dan tanggal daftar tidak boleh kosong.");
+        }
+    
+        // Update query
         $query = "UPDATE enrollments SET peserta = :peserta, kursus = :kursus, tanggal_daftar = :tanggal_daftar WHERE id = :id";
         $stmt = $this->db->prepare($query);
-        $stmt->bindParam(':peserta', $data['peserta']);
-        $stmt->bindParam(':kursus', $data['kursus']);
-        $stmt->bindParam(':tanggal_daftar', $data['tanggal_daftar']);
-        $stmt->bindParam(':id', $id);
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+        $stmt->bindParam(':peserta', $data['peserta'], PDO::PARAM_STR);
+        $stmt->bindParam(':kursus', $data['kursus'], PDO::PARAM_STR);
+        $stmt->bindParam(':tanggal_daftar', $data['tanggal_daftar'], PDO::PARAM_STR);
+        
         return $stmt->execute();
     }
+    
 
     // Delete user by ID
     public function delete($id) {
