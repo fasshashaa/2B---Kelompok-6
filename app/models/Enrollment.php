@@ -1,5 +1,5 @@
 <?php
-// app/models/User.php
+// app/models/enrollment.php
 require_once '../config/database.php';
 
 class Enrollment {
