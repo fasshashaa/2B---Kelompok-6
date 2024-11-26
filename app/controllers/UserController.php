@@ -1,53 +1,63 @@
 <?php
-// app/controllers/UserController.php
-require_once '../app/models/User.php';
+require_once '../config/database.php'; // Pastikan koneksi database sudah benar
+require_once '../app/models/Courses.php'; // Pastikan model Courses sudah di-include
 
 class UserController {
-    private $userModel;
+    private $courseModel;
 
-    public function __construct() {
-        $this->userModel = new User();
-    }
-
-    public function index() {
-        $users = $this->userModel->getAllUsers();
-        require_once '../app/views/user/index.php';
-
-    }
-
-    public function create() {
-        require_once '../app/views/user/create.php';
-    }
-
-    public function store() {
-        $name = $_POST['name'];
-        $email = $_POST['email'];
-        $this->userModel->add($name, $email);
-        header('Location: /user/index');
-    }
-    // Show the edit form with the user data
-    public function edit($id) {
-        $user = $this->userModel->find($id); // Assume find() gets user by ID
-        require_once __DIR__ . '/../views/user/edit.php';
-    }
-
-    // Process the update request
-    public function update($id, $data) {
-        $updated = $this->userModel->update($id, $data);
-        if ($updated) {
-            header("Location: /user/index"); // Redirect to user list
+    // Konstruktor untuk menerima model Courses
+    public function __construct($courseModel = null) {
+        if ($courseModel === null) {
+            $this->courseModel = new Courses(); // Jika model belum diberikan, buat instance baru
         } else {
-            echo "Failed to update user.";
+            $this->courseModel = $courseModel; // Jika sudah ada model yang diteruskan, gunakan itu
         }
     }
 
-    // Process delete request
-    public function delete($id) {
-        $deleted = $this->userModel->delete($id);
-        if ($deleted) {
-            header("Location: /user/index"); // Redirect to user list
+    /**
+     * Menampilkan daftar kursus
+     */
+    public function listCourses() {
+        $courses = $this->courseModel->getAllCourses();
+        include '../app/views/user/list.php'; // Pastikan path untuk view daftar kursus sudah benar
+    }
+
+    /**
+     * Menampilkan form untuk menambah kursus baru
+     */
+    public function addCourse() {
+        // Menangani permintaan POST dari form
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // Ambil data dari POST
+            $judul_kursus = $_POST['judul_kursus'];
+            $deskripsi = $_POST['deskripsi'];
+            $id_instruktur = $_POST['id_instruktur'];
+            $durasi = $_POST['durasi'];
+
+            // Validasi data
+            if (empty($judul_kursus) || empty($deskripsi) || empty($id_instruktur) || empty($durasi)) {
+                $error = "Semua kolom wajib diisi!";
+                include '../app/views/user/add_course.php'; // Menampilkan kembali form jika ada error
+                return;
+            }
+
+            // Menyimpan kursus ke database
+            $isSuccess = $this->courseModel->createCourse($judul_kursus, $deskripsi, $id_instruktur, $durasi);
+
+            // Jika berhasil, arahkan ke halaman daftar kursus
+            if ($isSuccess) {
+                header('Location: /course/list'); // Redirect ke daftar kursus setelah berhasil menambah
+                exit;
+            } else {
+                // Jika gagal, tampilkan error
+                $error = "Gagal menambahkan kursus. Silakan coba lagi.";
+                include '../app/views/user/add_course.php'; // Tampilkan form dengan pesan error
+            }
         } else {
-            echo "Failed to delete user.";
+            // Jika bukan POST, tampilkan form kosong
+            include '../app/views/user/add_course.php'; // Pastikan path-nya benar
         }
     }
+    
 }
+?>

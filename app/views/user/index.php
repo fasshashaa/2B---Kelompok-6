@@ -1,6 +1,7 @@
 <!-- app/views/user/index.php -->
-<h2>Daftar Pengguna</h2>
+<h2></h2>
 <a href="/user/create">Daftar Kursus </a>
+<a href="/user/add_course">Tambah Kursus </a>
 <ul>
     <?php foreach ($users as $user): ?>
         <div>

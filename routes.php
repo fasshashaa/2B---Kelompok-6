@@ -13,10 +13,10 @@ if ($url == '/courses/index' || $url == '/') {
     $controller->create();
 } elseif ($url == '/courses/store' && $requestMethod == 'POST') {
     $controller->store();
-} elseif ($url == '/courses/add_course' && $requestMethod == 'GET') {
-    $controller->addCourse();
-} elseif ($url == '/courses/add_course' && $requestMethod == 'POST') {
-    $controller->addCourse();
+} elseif ($url == '/courses/create' && $requestMethod == 'GET') {
+    $controller->create();
+} elseif ($url == '/courses/create' && $requestMethod == 'POST') {
+    $controller->create();
 } elseif (preg_match('/\/courses\/edit\/(\d+)/', $url, $matches) && $requestMethod == 'GET') {
     $coursesId = $matches[1];
     $controller->edit($coursesId);
