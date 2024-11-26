@@ -1,18 +1,15 @@
 <?php
-// app/controllers/UserController.php
-require_once '../app/models/User.php';
-
-class UserController {
-    private $userModel;
+// app/controllers/DataPesertaController.php
+class Controller {
+    private $dataPesertaa;
 
     public function __construct() {
-        $this->userModel = new User();
+        $this->dataPesertaa = new DataPeserta();
     }
 
     public function index() {
-        $users = $this->userModel->getAllUsers();
+        $peserta = $this->dataPesertaa->getAllData();
         require_once '../app/views/user/index.php';
-
     }
 
     public function create() {
@@ -20,34 +17,25 @@ class UserController {
     }
 
     public function store() {
-        $name = $_POST['name'];
-        $email = $_POST['email'];
-        $this->userModel->add($name, $email);
+        $peserta = $_POST['peserta'];
+        $kursus = $_POST['kursus'];
+        $tanggal_daftar = $_POST['tanggal_daftar'];
+        $this->dataPesertaModel->add($peserta, $kursus, $tanggal_daftar);
         header('Location: /user/index');
     }
-    // Show the edit form with the user data
+
     public function edit($id) {
-        $user = $this->userModel->find($id); // Assume find() gets user by ID
-        require_once __DIR__ . '/../views/user/edit.php';
+        $peserta = $this->dataPesertaa->find($id);
+        require_once '../app/views/user/edit.php';
     }
 
-    // Process the update request
     public function update($id, $data) {
-        $updated = $this->userModel->update($id, $data);
-        if ($updated) {
-            header("Location: /user/index"); // Redirect to user list
-        } else {
-            echo "Failed to update user.";
-        }
+        $this->dataPesertaa->update($id, $data);
+        header('Location: /user/index');
     }
 
-    // Process delete request
     public function delete($id) {
-        $deleted = $this->userModel->delete($id);
-        if ($deleted) {
-            header("Location: /user/index"); // Redirect to user list
-        } else {
-            echo "Failed to delete user.";
-        }
+        $this->dataPesertaa->delete($id);
+        header('Location: /user/index');
     }
 }
