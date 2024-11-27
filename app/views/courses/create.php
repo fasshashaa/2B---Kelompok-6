@@ -27,7 +27,7 @@
             display: block;
             color: #333;
         }
-        input, textarea {
+        input, select, textarea {
             width: 100%;
             padding: 10px;
             margin-bottom: 15px;
@@ -62,11 +62,9 @@
 </head>
 <body>
     <h2>Tambah Kursus Baru</h2>
-
     <?php if (isset($error)): ?>
         <p class="error-message"><?= htmlspecialchars($error) ?></p>
     <?php endif; ?>
-
     <form action="/courses/store" method="POST">
         <label for="judul_kursus">Judul Kursus:</label>
         <input type="text" id="judul_kursus" name="judul_kursus" placeholder="Masukkan judul kursus" required>
@@ -74,12 +72,21 @@
         <label for="deskripsi">Deskripsi:</label>
         <textarea id="deskripsi" name="deskripsi" placeholder="Deskripsi singkat kursus" rows="5" required></textarea>
 
-        <label for="id_instruktur">ID Instruktur:</label>
-        <input type="number" id="id_instruktur" name="id_instruktur" placeholder="Masukkan ID instruktur" required>
-
+        <label for="id_instruktur">Instruktur:</label>
+        <select name="id_instruktur" id="id_instruktur" required>
+            <option value="">Pilih Instruktur</option>
+            <?php if (!empty($instructors)): ?>
+                <?php foreach ($instructors as $instructor): ?>
+                    <option value="<?= htmlspecialchars($instructor['id_user']) ?>">
+                        <?= htmlspecialchars($instructor['name']) ?>
+                    </option>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <option value="" disabled>Instruktur tidak tersedia</option>
+            <?php endif; ?>
+        </select>
         <label for="durasi">Durasi (Jam):</label>
         <input type="text" id="durasi" name="durasi" placeholder="Durasi kursus dalam jam" required>
-
         <button type="submit">Tambah Kursus</button>
     </form>
 </body>

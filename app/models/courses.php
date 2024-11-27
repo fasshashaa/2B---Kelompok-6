@@ -1,23 +1,23 @@
 <?php
 require_once '../config/database.php';
 
-class Courses {
+class Courses
+{
     private $db;
-
-    public function __construct() {
+    public function __construct()
+    {
         $database = new Database();
         $this->db = $database->connect();
     }
-
     /**
-     * Mendapatkan semua data kursus.
-     *
      * @return array
      */
-    public function getAllCourses() {
+    public function getAllCourses()
+    {
         try {
             $query = "
                 SELECT 
+                    courses.id_courses,
                     courses.judul_kursus,
                     courses.deskripsi,
                     users.name AS instruktur,
@@ -36,7 +36,15 @@ class Courses {
         }
     }
 
-    public function addCourse($judul_kursus, $deskripsi, $id_instruktur, $durasi) {
+    /**
+     * @param string $judul_kursus
+     * @param string $deskripsi
+     * @param int $id_instruktur
+     * @param int $durasi
+     * @return bool
+     */
+    public function addCourse($judul_kursus, $deskripsi, $id_instruktur, $durasi)
+    {
         try {
             $query = "INSERT INTO courses (judul_kursus, deskripsi, id_instruktur, durasi) VALUES (?, ?, ?, ?)";
             $stmt = $this->db->prepare($query);
@@ -45,44 +53,87 @@ class Courses {
             die("Error adding course: " . $e->getMessage());
         }
     }
-    public function updateCourse($id, $judul_kursus, $deskripsi, $id_instruktur, $durasi) {
-        $query = "
-            UPDATE courses 
-            SET judul_kursus = ?, deskripsi = ?, id_instruktur = ?, durasi = ?
-            WHERE id_courses = ?
-        ";
-        $stmt = $this->db->prepare($query);
-        return $stmt->execute([$judul_kursus, $deskripsi, $id_instruktur, $durasi, $id]);
-    }
-    
 
-    public function deleteCourse($id_courses) {
-        $query = "DELETE FROM courses WHERE id_courses = ?";
-        $stmt = $this->db->prepare($query);
-        return $stmt->execute([$id_courses]);
-    }
-    public function getCourseById($courseId) {
+    /**
+     * @param int $id
+     * @param string $judul_kursus
+     * @param string $deskripsi
+     * @param int $id_instruktur
+     * @param int $durasi
+     * @return bool
+     */
+    public function updateCourse($id, $judul_kursus, $deskripsi, $id_instruktur, $durasi)
+    {
         try {
             $query = "
+                UPDATE courses 
+                SET judul_kursus = ?, deskripsi = ?, id_instruktur = ?, durasi = ?
+                WHERE id_courses = ?
+            ";
+            $stmt = $this->db->prepare($query);
+            return $stmt->execute([$judul_kursus, $deskripsi, $id_instruktur, $durasi, $id]);
+        } catch (PDOException $e) {
+            die("Error updating course: " . $e->getMessage());
+        }
+    }
+
+    /**
+     * @param int $id_courses
+     * @return bool
+     */
+    public function deleteCourse($courseId)
+    {
+        // Logika untuk menghapus kursus dari database
+        $query = "DELETE FROM courses WHERE id_courses = :id_courses";
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(':id_courses', $courseId);
+        return $stmt->execute();
+    }
+
+    /**
+     * Mendapatkan data kursus berdasarkan ID.
+     * @param int $courseId
+     * @return array|null
+     */
+    public function getCourseById($courseId)
+    {
+        try {
+            // Validasi ID
+            if (!is_numeric($courseId)) {
+                throw new InvalidArgumentException("Invalid course ID.");
+            }
+
+            $query = "
                 SELECT 
+                    courses.id_courses,
                     courses.judul_kursus,
                     courses.deskripsi,
                     courses.id_instruktur,
-                    courses.durasi,
-                    courses.id_courses
+                    courses.durasi
                 FROM 
                     courses
                 WHERE 
-                    courses.id_courses = ?
+                    id_courses = ?
             ";
             $stmt = $this->db->prepare($query);
             $stmt->execute([$courseId]);
-            return $stmt->fetch(PDO::FETCH_ASSOC); // Mengembalikan satu baris data kursus
+            $course = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if (!$course) {
+                throw new Exception("Course not found with ID: $courseId");
+            }
+
+            return $course;
         } catch (PDOException $e) {
             die("Error fetching course by ID: " . $e->getMessage());
+        } catch (Exception $e) {
+            die($e->getMessage());
         }
     }
-    
-    
+    public function getInstructors()
+    {
+        $query = "SELECT id_user, name FROM users WHERE peran = 'instruktur'";
+        $stmt = $this->db->query($query);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }
-?>

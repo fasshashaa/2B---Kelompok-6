@@ -9,19 +9,17 @@ class CoursesController {
     public function __construct() {
         $this->courseModel = new Courses();
     }
-
     // Menampilkan daftar kursus
     public function index() {
         $kursus = $this->courseModel->getAllCourses();
         require_once '../app/views/courses/index.php';
     }
-
     // Menampilkan form pembuatan kursus
     public function create() {
-        $users = $this->userModel->getAllUsers(); // Ambil semua instruktur
+        $users = $this->courseModel->getAllCourses(); 
+        $instructors = $this->courseModel->getInstructors(); 
         require_once '../app/views/courses/create.php';
     }
-
     // Menyimpan data kursus baru
     public function store() {
         $judul_kursus = htmlspecialchars($_POST['judul_kursus'] ?? '');
@@ -39,21 +37,15 @@ class CoursesController {
         } else {
             $error = "Semua kolom wajib diisi!";
         }
-        require_once '../app/views/courses/create.php';  // Tampilkan form kembali jika ada error
+        require_once '../app/views/courses/create.php';  
     }
-
     // Menampilkan form edit kursus
-public function editCourse($courseId) {
-    $courseId = intval($courseId); // Pastikan ID valid
-    $course = $this->courseModel->getCourseById($courseId); // Ambil data kursus
-    if ($course) {
-        require_once '../app/views/courses/edit.php'; // Tampilkan form edit
-    } else {
-        echo "Kursus dengan ID $courseId tidak ditemukan.";
+    public function editCourse($courseId) {
+        $courseId = intval($courseId); // Pastikan ID valid
+        $course = $this->courseModel->getCourseById($courseId); // Data kursus
+        $instructors = $this->courseModel->getInstructors(); // Daftar instruktur
+        require_once '../app/views/courses/edit.php'; // Tampilkan view
     }
-}
-
-
     // Memproses pembaruan kursus
     public function updateCourse($courseId) {
         $id_courses = intval($courseId); // Pastikan ID valid
@@ -73,16 +65,22 @@ public function editCourse($courseId) {
         } else {
             echo "Data input tidak valid.";
         }
-    }
-
-    // Memproses penghapusan kursus
-    public function deleteCourse($id_courses) {
-        $id_courses = intval($id_courses); // Pastikan ID valid
-        if ($this->courseModel->deleteCourse($id_courses)) {
-            header('Location: /courses/index');
-            exit;
+    }  
+    public function deleteCourse($courseId) {
+        // Validasi jika courseId ada dan valid
+        if ($courseId > 0) {
+            // Implementasikan logika untuk menghapus kursus berdasarkan ID
+            $courseModel = new Courses();
+            if ($courseModel->deleteCourse($courseId)) {
+                // Penghapusan berhasil, arahkan ke halaman daftar kursus
+                header('Location: /courses/index');
+                exit;
+            } else {
+                // Jika gagal menghapus, tampilkan pesan error
+                echo "Gagal menghapus kursus";
+            }
         } else {
-            echo "Gagal menghapus kursus.";
+            echo "ID kursus tidak valid";
         }
     }
 }
