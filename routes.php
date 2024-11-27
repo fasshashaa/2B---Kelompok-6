@@ -1,11 +1,35 @@
 <?php
 // routes.php
 
+
+require_once 'app/controllers/EnrollmentController.php';
 require_once 'app/controllers/UserController.php';
 
 $controller = new UserController();
+$controller1 = new EnrollmentController();
+
 $url = $_SERVER['REQUEST_URI'];
 $requestMethod = $_SERVER['REQUEST_METHOD'];
+
+if ($url == '/enrollment/index' || $url == '/') {
+    $controller1->index();
+} elseif ($url == '/enrollment/create' && $requestMethod == 'GET') {
+    $controller1->create();
+} elseif ($url == '/enrollment/store' && $requestMethod == 'POST') {
+    $controller1->store();
+} elseif (preg_match('/\/enrollment\/edit\/(\d+)/', $url, $matches) && $requestMethod == 'GET') {
+    $id = $matches[1];
+    $controller1->edit($id);
+} elseif (preg_match('/\/enrollment\/update\/(\d+)/', $url, $matches) && $requestMethod == 'POST') {
+    $id = $matches[1];
+    $controller1->update($id, $_POST);
+} elseif (preg_match('/\/enrollment\/delete\/(\d+)/', $url, $matches) && $requestMethod == 'GET') {
+    $id = $matches[1];
+    $controller1->delete($id);
+} else {
+    http_response_code(404);
+    echo "404 Not Found";
+}
 
 if ($url == '/user/index' || $url == '/') {
     $controller->index();
@@ -26,3 +50,4 @@ if ($url == '/user/index' || $url == '/') {
     http_response_code(404);
     echo "404 Not Found";
 }
+
