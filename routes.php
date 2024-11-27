@@ -5,6 +5,7 @@ $controllerCourses = new CoursesController();
 $url = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH); 
 $requestMethod = $_SERVER['REQUEST_METHOD'];
 
+
 if ($url === '/courses/index' || $url === '/') {
     $controllerCourses->index();
 } elseif ($url === '/courses/create' && $requestMethod === 'GET') {
