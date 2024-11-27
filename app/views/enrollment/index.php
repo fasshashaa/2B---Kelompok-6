@@ -52,6 +52,7 @@
                         <td>
                             <a href="/enrollment/edit/<?php echo $user['id']; ?>">Edit</a> |
                             <a href="/enrollment/delete/<?php echo $user['id']; ?>" onclick="return confirm('Are you sure?')">Delete</a>
+                            
                         </td>
                     </tr>
                 <?php endforeach; ?>
