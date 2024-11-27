@@ -14,10 +14,20 @@ class EnrollmentController {
         require_once '../app/views/enrollment/index.php';
 
     }
+   // app/controllers/EnrollmentController.php
 
-    public function create() {
+   public function create() {
+    try {
+        // Fetch users and courses; ensure your methods in Enrollment return valid data
+        $users = $this->pesertaenrollment->getAllUsers();
+        $courses = $this->pesertaenrollment->getAllCourses();
         require_once '../app/views/enrollment/create.php';
+    } catch (Exception $e) {
+        // Handle any errors (e.g., database errors)
+        echo "Error: " . $e->getMessage();
     }
+}
+
 
     public function store() {
         $peserta = $_POST['peserta'];
@@ -27,10 +37,23 @@ class EnrollmentController {
         header('Location: /enrollment/index');
     }
     // Show the edit form with the user data
-    public function edit($id) {
-        $peserta = $this->pesertaenrollment->find($id); // Assume find() gets user by ID
-        require_once __DIR__ . '/../views/enrollment/edit.php';
-    }
+    // Controller (misalnya EnrollmentController.php)
+
+    
+// app/controllers/EnrollmentController.php
+
+public function edit($id) {
+    // Ambil data peserta berdasarkan ID
+    $peserta = $this->pesertaenrollment->find($id);
+
+    // Ambil daftar peserta dan kursus untuk dropdown
+    $users = $this->pesertaenrollment->getAllUsers();
+    $courses = $this->pesertaenrollment->getAllCourses();
+
+    require_once __DIR__ . '/../views/enrollment/edit.php';
+}
+
+
 
     // Process the update request
     public function update($id, $data) {
@@ -51,13 +74,13 @@ class EnrollmentController {
     }
     
 
-    // Process delete request
-    public function delete($id) {
-        $deleted = $this->pesertaenrollment->delete($id);
-        if ($deleted) {
-            header("Location: enrollment/index"); // Redirect to user list
-        } else {
-            echo "Failed to delete peserta.";
-        }
+ // Process delete request
+ public function delete($id) {
+    $deleted = $this->pesertaenrollment->delete($id);
+    if ($deleted) {
+        header("Location: /enrollment/index"); // Redirect to user list
+    } else {
+        echo "Failed to delete user.";
     }
+}
 }
