@@ -73,3 +73,4 @@ class Enrollment {
         return $stmt->execute();
     }
 }
+
