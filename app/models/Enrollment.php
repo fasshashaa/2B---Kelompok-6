@@ -9,6 +9,23 @@ class Enrollment {
         $this->db = (new Database())->connect();
     }
 
+    // app/models/Enrollment.php
+
+    public function getAllUsers() {
+        // Ensure database connection is valid
+        if (!$this->db) {
+            throw new Exception("Database connection failed");
+        }
+        $query = $this->db->query("SELECT id_user, name FROM users");
+        return $query->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getAllCourses() {
+        $query = $this->db->query("SELECT id_courses, judul_kursus FROM courses");
+        return $query->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+
     public function getAllPeserta() {
         $query = $this->db->query("SELECT * FROM enrollments");
         return $query->fetchAll(PDO::FETCH_ASSOC);
