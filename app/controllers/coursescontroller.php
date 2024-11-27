@@ -1,5 +1,5 @@
 <?php
-require_once '../app/models/User.php';
+
 require_once '../app/models/Courses.php';
 
 class CoursesController {
