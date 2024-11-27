@@ -1,3 +1,4 @@
+
 <?php
 // app/models/User.php
 require_once '../config/database.php';
@@ -33,7 +34,7 @@ class User {
     }
 
     // Update user data by ID
-    public function update($id, $data) 
+    public function update($id, $data) {
         $query = "UPDATE users SET name = :name, email = :email, password = :password, peran = :peran WHERE id_user = :id";
         $stmt = $this->db->prepare($query);
         $stmt->bindParam(':name', $data['name']);

@@ -83,4 +83,6 @@ public function edit($id) {
         echo "Failed to delete user.";
     }
 }
+
 }
+

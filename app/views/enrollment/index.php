@@ -1,67 +1,45 @@
-<!-- app/views/enrollment/index.php -->
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Daftar Peserta</title>
-    <style>
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-        }
-        table th, table td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
-        }
-        table th {
-            background-color: #f4f4f4;
-        }
-        a {
-            text-decoration: none;
-            color: #007BFF;
-        }
-        a:hover {
-            text-decoration: underline;
-        }
-    </style>
-</head>
-<body>
-    <h2>Daftar Peserta</h2>
-    <a href="/enrollment/create">Tambah Daftar Peserta</a>
-    <table>
-        <thead>
-            <tr>
-                <th>No</th>
-                <th>Nama Peserta</th>
-                <th>Jenis Kursus</th>
-                <th>Tanggal Daftar</th>
-                <th>Aksi</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php if (count($users) > 0): ?>
-                <?php foreach ($users as $index => $user): ?>
-                    <tr>
-                        <td><?= $index + 1; ?></td>
-                        <td><?= htmlspecialchars($user['peserta']); ?></td>
-                        <td><?= htmlspecialchars($user['kursus']); ?></td>
-                        <td><?= htmlspecialchars($user['tanggal_daftar']); ?></td>
-                        <td>
-                            <a href="/enrollment/edit/<?php echo $user['id']; ?>">Edit</a> |
-                            <a href="/enrollment/delete/<?php echo $user['id']; ?>" onclick="return confirm('Are you sure?')">Delete</a>
-                            
-                        </td>
-                    </tr>
-                <?php endforeach; ?>
-            <?php else: ?>
+<?php include(__DIR__ . '/../../../public/header.php');
+ ?>
+<?php include(__DIR__ . '/../../../public/sidebar.php');
+ ?>
+
+<div id="page-content-wrapper">
+    <div class="container mt-4">
+        <h2>Daftar Peserta</h2>
+        <a href="/enrollment/create" class="btn btn-primary mb-3">Tambah Daftar Peserta</a>
+        <a href="/courses/index" class="btn btn-primary mb-3">Info Kursus</a>
+
+        <table class="table table-striped table-bordered">
+            <thead>
                 <tr>
-                    <td colspan="5" style="text-align: center;">Tidak ada peserta yang terdaftar.</td>
+                    <th>No</th>
+                    <th>Nama Peserta</th>
+                    <th>Jenis Kursus</th>
+                    <th>Tanggal Daftar</th>
+                    <th>Aksi</th>
                 </tr>
-            <?php endif; ?>
-        </tbody>
-    </table>
-</body>
-</html>
+            </thead>
+            <tbody>
+                <?php if (count($users) > 0): ?>
+                    <?php foreach ($users as $index => $user): ?>
+                        <tr>
+                            <td><?= $index + 1; ?></td>
+                            <td><?= htmlspecialchars($user['peserta']); ?></td>
+                            <td><?= htmlspecialchars($user['kursus']); ?></td>
+                            <td><?= htmlspecialchars($user['tanggal_daftar']); ?></td>
+                            <td>
+                                <a href="/enrollment/edit/<?php echo $user['id']; ?>" class="btn btn-warning btn-sm">Edit</a>
+                                <a href="/enrollment/delete/<?php echo $user['id']; ?>" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">Hapus</a>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <tr>
+                        <td colspan="5" class="text-center">Tidak ada peserta yang terdaftar.</td>
+                    </tr>
+                <?php endif; ?>
+            </tbody>
+        </table>
+    </div>
+</div>
+
