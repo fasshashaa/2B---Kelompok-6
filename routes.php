@@ -12,20 +12,21 @@ $url = $_SERVER['REQUEST_URI'];
 $requestMethod = $_SERVER['REQUEST_METHOD'];
 
 if ($url == '/enrollment/index' || $url == '/') {
-    $controller1->index();
+    $controller->index();
 } elseif ($url == '/enrollment/create' && $requestMethod == 'GET') {
-    $controller1->create();
+    $controller->create();
 } elseif ($url == '/enrollment/store' && $requestMethod == 'POST') {
-    $controller1->store();
+    $controller->store();
 } elseif (preg_match('/\/enrollment\/edit\/(\d+)/', $url, $matches) && $requestMethod == 'GET') {
     $id = $matches[1];
-    $controller1->edit($id);
+    $controller->edit($id);
 } elseif (preg_match('/\/enrollment\/update\/(\d+)/', $url, $matches) && $requestMethod == 'POST') {
     $id = $matches[1];
-    $controller1->update($id, $_POST);
+    $controller->update($id, $_POST);
+    
 } elseif (preg_match('/\/enrollment\/delete\/(\d+)/', $url, $matches) && $requestMethod == 'GET') {
     $id = $matches[1];
-    $controller1->delete($id);
+    $controller->delete($id);
 } else {
     http_response_code(404);
     echo "404 Not Found";
