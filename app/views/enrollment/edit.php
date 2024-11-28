@@ -1,27 +1,47 @@
-<!-- app/views/user/edit.php -->
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Edit Pendaftaran Peserta</title>
-</head>
-<body>
-    <h2>Edit Pendaftaran Peserta</h2>
-    <form action="/enrollment/update/<?php echo $peserta['id']; ?>" method="POST">
-        <pre>
-        <label for="peserta">Nama Peserta:</label>
-        <input type="text" id="peserta" name="peserta" value="<?php echo $peserta['peserta']; ?>" required>
-        <input type="hidden" id="id" name="id" value="<?php echo $peserta['id']; ?>" required>
-        <br>
-        <label for="kursus">Jenis Kursus:</label>
-        <input type="text" id="kursus" name="kursus" value="<?php echo $peserta['kursus']; ?>" required>
-        <br>
-        <label for="tanggal_daftar">Tanggal Daftar:</label>
-        <input type="date" id="tanggal_daftar" name="tanggal_daftar" value="<?php echo $peserta['tanggal_daftar']; ?>" required>
-        <br>
-        <button type="submit">Update</button>
-</pre>
-    </form>
-    <a href="/user/index">Back to List</a>
-</body>
-</html>
+<?php include(__DIR__ . '/../../../public/header.php');
+ ?>
+<?php include(__DIR__ . '/../../../public/sidebar.php');
+ ?>
+
+<div id="page-content-wrapper">
+    <div class="container mt-4">
+        <h2>Edit Pendaftaran Peserta</h2>
+        <form action="/enrollment/update/<?php echo $peserta['id']; ?>" method="POST">
+            <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($csrf_token); ?>">
+
+            <div class="mb-3">
+                <label for="peserta" class="form-label">Nama Peserta :</label>
+                <select name="peserta" id="peserta" class="form-select" required>
+                    <option value="" disabled>Pilih Peserta</option>
+                    <?php foreach ($users as $user): ?>
+                        <option value="<?= $user['name']; ?>" <?= ($user['name'] == $peserta['peserta']) ? 'selected' : ''; ?>>
+                            <?= $user['name']; ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label for="kursus" class="form-label">Jenis Kursus :</label>
+                <select name="kursus" id="kursus" class="form-select" required>
+                    <option value="" disabled>Pilih Kursus</option>
+                    <?php foreach ($courses as $course): ?>
+                        <option value="<?= $course['judul_kursus']; ?>" <?= ($course['judul_kursus'] == $peserta['kursus']) ? 'selected' : ''; ?>>
+                            <?= $course['judul_kursus']; ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label for="tanggal_daftar" class="form-label">Tanggal Daftar :</label>
+                <input type="date" name="tanggal_daftar" id="tanggal_daftar" class="form-control" value="<?php echo $peserta['tanggal_daftar']; ?>" required>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+        </form>
+
+        
+    </div>
+</div>
+
