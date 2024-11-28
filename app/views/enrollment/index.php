@@ -1,7 +1,5 @@
-<?php include(__DIR__ . '/../../../public/header.php');
- ?>
-<?php include(__DIR__ . '/../../../public/sidebar.php');
- ?>
+<?php include(__DIR__ . '/../../../public/header.php');?>
+<?php include(__DIR__ . '/../../../public/sidebar.php');?>
 
 <div id="page-content-wrapper">
     <div class="container mt-4">
